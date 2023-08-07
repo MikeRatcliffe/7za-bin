@@ -1,0 +1,34 @@
+#!/bin/sh
+if [ "$#" -eq 0 ]
+then
+  echo "Usage: update 2301 # Downloads command line version of 7z v2301"
+  exit 0
+fi
+
+version=$1
+
+mkdir tmp
+cd tmp
+
+wget https://www.7-zip.org/a/7z${version}-extra.7z
+7zz e 7z${version}-extra.7z -o../win/ia32/ 7za.exe
+7zz e 7z${version}-extra.7z -o../win/x64/ x64/7za.exe
+
+wget https://www.7-zip.org/a/7z${version}-mac.tar.xz
+7zz e 7z${version}-mac.tar.xz
+7zz e 7z${version}-mac.tar -o../mac/x64/ 7zz
+mv ../mac/x64/7zz ../mac/x64/7za
+cp ../mac/x64/7za ../mac/ia32/7za
+
+wget https://www.7-zip.org/a/7z${version}-linux-x86.tar.xz
+7zz e 7z${version}-linux-x86.tar.xz
+7zz e 7z${version}-linux-x86.tar -o../linux/ia32/ 7zz
+mv ../linux/ia32/7zz ../linux/ia32/7za
+
+wget https://www.7-zip.org/a/7z${version}-linux-x64.tar.xz
+7zz e 7z${version}-linux-x64.tar.xz
+7zz e 7z${version}-linux-x64.tar -o../linux/x64/ 7zz
+mv ../linux/x64/7zz ../linux/x64/7za
+
+cd ..
+rm -rf tmp
